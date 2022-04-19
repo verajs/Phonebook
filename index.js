@@ -1,5 +1,7 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -48,6 +50,58 @@ app.get("/api/persons/:id", (request, response) => {
   } else {
     response.status(404).end();
   }
+});
+
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id);
+  persons = persons.filter((person) => person.id !== id);
+  response.status(204).end();
+});
+
+const generateId = () => {
+  let max = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
+  max += 1;
+  max = Math.floor(Math.random() * (9999999999 - max + 1) + max);
+  return max;
+};
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+  console.log(body);
+  if (!body.name && !body.number) {
+    return response.status(400).json({
+      error: "name and number are missing",
+    });
+  } else if (!body.name) {
+    return response.status(400).json({
+      error: "name is missing",
+    });
+  } else if (!body.number) {
+    return response.status(400).json({
+      error: "number is missing",
+    });
+  } else if (
+    persons.map((person) => person.name).includes(body.name) === true
+  ) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  } else if (
+    persons.map((person) => person.number).includes(body.number) === true
+  ) {
+    return response.status(400).json({
+      error: "number must be unique",
+    });
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+  response.json(person);
 });
 
 const PORT = 3001;
