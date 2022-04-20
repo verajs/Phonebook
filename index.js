@@ -1,8 +1,12 @@
 const { response } = require("express");
 const express = require("express");
-const morgan = require("morgan");
+const morgan = require("morgan")
 const app = express();
-app.use(morgan)
+
+morgan.token('body', (req) => JSON.stringify(req.body))
+app.use(morgan('tiny', ':body'))
+
+
 app.use(express.json());
 
 let persons = [
@@ -41,6 +45,7 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
+  app.use(morgan('tiny'))
   response.json(persons);
 });
 
