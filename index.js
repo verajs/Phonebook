@@ -10,16 +10,7 @@ morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan('tiny', ':body'))
 app.use(express.json());
 const mongoose = require ('mongoose')
-
-const url = `mongodb+srv://phonebook:${process.env.password}@phonebook.t1qs1.mongodb.net/Phonebook?retryWrites=true&w=majority`
-
-  mongoose.connect(url);
-  const phoneSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-  });
-
-  const Contact = mongoose.model("Contact", phoneSchema);
+const Contact = require('./models/contact')
 
 
 app.get("/", (request, response) => {
@@ -28,9 +19,9 @@ app.get("/", (request, response) => {
 
 app.get("/info", (request, response) => {
   const date = new Date();
-  const length = persons.length;
+  
   response.send(
-    `<p>Phonebook has info for ${length} people</p> <p>${date}</p>`
+    `<p>Phonebook has people info</p> <p>${date}</p>`
   );
 });
 
@@ -40,67 +31,58 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
+app.get('/api/persons/:id', (request, response) => {
+  Contact.findById(request.params.id)
+    .then(contact => {
+      if (contact) {
+        response.json(contact)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
+})
+
+app.delete('/api/persons/:id', (request, response, next) => {
+  Contact.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (body.name && body.number === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
-});
+ else if (!body.name) {
+  return response.status(400).json({
+    error: "name is missing",
+  });
+} else if (!body.number) {
+  return response.status(400).json({
+    error: "number is missing",
+  });
+} 
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
-  response.status(204).end();
-});
 
-const generateId = () => {
-  let max = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-  max += 1;
-  max = Math.floor(Math.random() * (9999999999 - max + 1) + max);
-  return max;
-};
-
-app.post("/api/persons", (request, response) => {
-  const body = request.body;
-  console.log(body);
-  if (!body.name && !body.number) {
-    return response.status(400).json({
-      error: "name and number are missing",
-    });
-  } else if (!body.name) {
-    return response.status(400).json({
-      error: "name is missing",
-    });
-  } else if (!body.number) {
-    return response.status(400).json({
-      error: "number is missing",
-    });
-  } else if (
-    persons.map((person) => person.name).includes(body.name) === true
-  ) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  } else if (
-    persons.map((person) => person.number).includes(body.number) === true
-  ) {
-    return response.status(400).json({
-      error: "number must be unique",
-    });
-  }
-
-  const person = {
-    id: generateId(),
+  const person = new Contact ({
     name: body.name,
     number: body.number,
-  };
+  })
 
-  persons = persons.concat(person);
-  response.json(person);
-});
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
+
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
