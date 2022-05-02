@@ -1,6 +1,7 @@
 const { response } = require("express");
 const express = require("express");
 const cors = require('cors')
+require('dotenv').config()
 const morgan = require("morgan")
 const app = express();
 app.use(express.static('build'))
@@ -8,29 +9,18 @@ app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan('tiny', ':body'))
 app.use(express.json());
+const mongoose = require ('mongoose')
 
-let persons = [
-  {
-    id: 1,
-    name: "Aleksandr Scriabin",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Yerin Baek",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Satoshi Nakamoto",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Larry David",
-    number: "39-23-6423122",
-  },
-];
+const url = `mongodb+srv://phonebook:${process.env.password}@phonebook.t1qs1.mongodb.net/Phonebook?retryWrites=true&w=majority`
+
+  mongoose.connect(url);
+  const phoneSchema = new mongoose.Schema({
+    name: String,
+    number: String,
+  });
+
+  const Contact = mongoose.model("Contact", phoneSchema);
+
 
 app.get("/", (request, response) => {
   response.send("<h1>Welcome to the Phonebook API!</h1>");
@@ -44,10 +34,11 @@ app.get("/info", (request, response) => {
   );
 });
 
-app.get("/api/persons", (request, response) => {
-  app.use(morgan('tiny'))
-  response.json(persons);
-});
+app.get('/api/persons', (request, response) => {
+  Contact.find({}).then(notes => {
+    response.json(notes)
+  })
+})
 
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
