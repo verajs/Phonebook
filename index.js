@@ -13,16 +13,18 @@ const mongoose = require ('mongoose')
 const Contact = require('./models/contact')
 
 
+
 app.get("/", (request, response) => {
   response.send("<h1>Welcome to the Phonebook API!</h1>");
 });
 
 app.get("/info", (request, response) => {
   const date = new Date();
-  
-  response.send(
-    `<p>Phonebook has people info</p> <p>${date}</p>`
-  );
+  Contact.find({}).then(persons => {
+    response.send(
+      `<p>Phonebook has info for ${persons.length} persons</p> <p>${date}</p>`
+    );
+  })
 });
 
 app.get('/api/persons', (request, response) => {
@@ -40,10 +42,7 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -82,7 +81,31 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Contact.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+}
+app.use(errorHandler)
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
