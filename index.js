@@ -12,8 +12,6 @@ app.use(express.json());
 const mongoose = require ('mongoose')
 const Contact = require('./models/contact')
 
-
-
 app.get("/", (request, response) => {
   response.send("<h1>Welcome to the Phonebook API!</h1>");
 });
@@ -79,6 +77,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {

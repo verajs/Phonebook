@@ -1,0 +1,198 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 15px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+@font-face {
+  font-family: "IBMSemiBold";
+  src: local("IBMSemiBold"),
+    url("./fonts/IBM/IBMPlexSans-SemiBold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "IBMLight";
+  src: local("IBMLight"),
+    url("./fonts/IBM/IBMPlexSans-Light.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "IBMELItalic";
+  src: local("IBMELItalic"),
+    url("./fonts/IBM/IBMPlexSans-ExtraLightItalic.ttf") format("truetype");
+  font-weight: lighter;
+}
+
+h1 {
+  font-family: "IBMSemiBold";
+}
+h2 {
+  font-family: "IBMSemiBold";
+}
+
+button {
+  font-family: "IBMSemiBold";
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 0 20px;
+  background-color: antiquewhite;
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px, 3px 3px 1px 1px rgba(0, 0, 0, 1);
+}
+button:hover {
+  background: rgba(0, 0, 0, 1);
+  color: antiquewhite;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.notif {
+  color: black;
+  background: white;
+  font-family: "IBMLight";
+  font-size: 25px;
+  border-style: solid;
+  border-radius: 2px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.divposition {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.numbers {
+  font-family: "IBMLight";
+}
+
+.formtable {
+  margin-bottom: 60px;
+  border-radius: 0px;
+  padding: 0px;
+  font-family: "IBMLight";
+  text-align: justify;
+}
+
+.formbutton {
+  font-family: "IBMSemiBold";
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 4px 20px;
+  background-color: antiquewhite(117, 96, 68);
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px, 3px 3px 1px 1px rgba(0, 0, 0, 1);
+}
+formbutton:hover {
+  background: rgba(0, 0, 0, 1);
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+input {
+  display: block;
+  width: 45px;
+  font-size: 14pt;
+  line-height: 28pt;
+  font-family: "IBMLight";
+  margin-bottom: 28pt;
+  border: none;
+  border-bottom: 4px solid black;
+  background: #ffffff;
+  min-width: 250px;
+  padding-left: 5px;
+  outline: none;
+  color: black;
+}
+
+.numberstable {
+  border-style: solid;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  padding: 25px;
+  background: #f7f749;
+  font-family: "IBMLight";
+  text-align: center;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  gap: 0.125rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.topgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.footer {
+  position: fixed;
+  top: 12px;
+  right: 30px;
+  font-family: "IBMELItalic";
+}
+
+.footerbutton {
+  font-family: "IBMSemiBold";
+  position: relative;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 4px 20px;
+  background-color: antiquewhite(117, 96, 68);
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px, 3px 3px 1px 1px rgba(0, 0, 0, 1);
+  
+}
+
+.notification {
+  font-family: "IBMSemiBold";
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 4px 20px;
+  background-color: antiquewhite(117, 96, 68);
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px, 3px 3px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.logo {
+  font-family: "IBMSemiBold";
+  margin-top: 10px;
+  padding: 4px 20px;
+  background-color: antiquewhite(117, 96, 68);
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px, 3px 3px 1px 1px rgba(0, 0, 0, 1);
+  width: fit-content;
+  margin-bottom: 32px;
+}
