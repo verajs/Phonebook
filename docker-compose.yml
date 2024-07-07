@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    platform: linux/amd64
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: "mongodb://mongo:27017/your_database_name"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4
+    platform: linux/amd64
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

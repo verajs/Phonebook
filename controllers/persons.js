@@ -1,6 +1,5 @@
-const Contact = require('../models/contact')
-const contactRouter = require('express').Router()
-const User = require('../models/user')
+const Contact = require('../models/contact');
+const contactRouter = require('express').Router();
 
 contactRouter.get("/info", (request, response, next) => {
   const date = new Date();
@@ -14,7 +13,7 @@ contactRouter.get("/info", (request, response, next) => {
 });
 
 contactRouter.get("/", (request, response, next) => {
-  Contact.find({}).populate('user', { username: 1, name: 1 }).then((notes) => {
+  Contact.find({}).then((notes) => {
     response.json(notes); 
   }).catch((error) => next(error));
 });
@@ -40,24 +39,18 @@ contactRouter.delete("/:id", (request, response, next) => {
 });
 
 contactRouter.post("/", async (request, response, next) => {
-  const { name, number, userId } = request.body;
-
-  const user = await User.findById(userId)
+  const { name, number } = request.body;
 
   const person = new Contact({
     name: name,
-    number: number,
-    user: user._id
+    number: number
   });
 
   try {
-  const savedPerson = await person.save()
-  user.contacts = user.contacts.concat(savedPerson._id)
-  await user.save()
-  response.json(savedPerson)
-  }
-  catch(exception) {
-    next(exception)
+    const savedPerson = await person.save();
+    response.json(savedPerson);
+  } catch (exception) {
+    next(exception);
   }
 });
 
@@ -66,7 +59,7 @@ contactRouter.put("/:id", (request, response, next) => {
 
   const person = {
     name: body.name,
-    number: body.number,
+    number: body.number
   };
 
   Contact.findByIdAndUpdate(request.params.id, person, { new: true })
@@ -76,4 +69,4 @@ contactRouter.put("/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-module.exports = contactRouter
+module.exports = contactRouter;
